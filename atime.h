@@ -379,7 +379,7 @@ class atime {
 
 	std::string leadZeroes(std::string str, int desiredLength) {
 		for (int i = str.length(); i < desiredLength; i++) {
-			str.append("0");
+			str = "0" + str;
 		}
 		return str;
 	}
