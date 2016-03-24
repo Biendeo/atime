@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 	//testTimeB.now();
 	//testTimeB += testTimeA;
 
-	std::cout << testTimeA.time() << ", " << testTimeA.display() << std::endl;
+	std::cout << testTimeA.time() << ", " << testTimeA.display("EEE h:mm:ss a - MMM d YYYY") << std::endl;
 	//std::cout << testTimeB.time() << ", " << testTimeB.display()  << std::endl;
 
 	testTimeA.setYear(1989);
