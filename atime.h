@@ -55,34 +55,27 @@ class atime {
 		}
 		
 		while ((foundPos = format.find("MM")) != std::string::npos) {
-			// TODO: Format this with a leading 0 if necessary.
-			format.replace(foundPos, 2, std::to_string(getMonth()));
+			format.replace(foundPos, 2, leadZeroes(std::to_string(getMonth()), 0));
 		}
 		
 		while ((foundPos = format.find("dd")) != std::string::npos) {
-			// TODO: Format this with a leading 0 if necessary.
-			format.replace(foundPos, 2, std::to_string(getDayOfMonth()));
+			format.replace(foundPos, 2, leadZeroes(std::to_string(getDayOfMonth()), 0));
 		}
 		
 		while ((foundPos = format.find("EEE")) != std::string::npos) {
-			// TODO: Make a day of week string.
 			format.replace(foundPos, 3, std::to_string(getDayOfWeek()));
 		}
 		
 		while ((foundPos = format.find("hh")) != std::string::npos) {
-			// TODO: Format this with a leading 0 if necessary.
 			format.replace(foundPos, 2, std::to_string(getHour()));
 		}
 
-		
 		while ((foundPos = format.find("mm")) != std::string::npos) {
-			// TODO: Format this with a leading 0 if necessary.
-			format.replace(foundPos, 2, std::to_string(getMinute()));
+			format.replace(foundPos, 2, leadZeroes(std::to_string(getMinutes()), 2));
 		}
 
 		while ((foundPos = format.find("ss")) != std::string::npos) {
-			// TODO: Format this with a leading 0 if necessary.
-			format.replace(foundPos, 2, std::to_string(getSecond()));
+			format.replace(foundPos, 2, leadZeroes(std::to_string(getSeconds()), 2));
 		}
 
 		return format;
@@ -102,39 +95,137 @@ class atime {
 	}
 
 	int getYear() {
-		return localtime(&timeData)->tm_year + 1900;
+		// TODO: Create own localtime function to make it thread-safe.
+		return localtime(&timeData)->tm_year + YEAR_DIFFERENCE_TO_MK;
 	}
 
 	int getMonth() {
+		// TODO: Create own localtime function to make it thread-safe.
 		return localtime(&timeData)->tm_mon + 1;
 	}
 
 	int getDayOfMonth() {
+		// TODO: Create own localtime function to make it thread-safe.
 		return localtime(&timeData)->tm_mday;
 	}
 
 	int getDayOfYear() {
+		// TODO: Create own localtime function to make it thread-safe.
 		return localtime(&timeData)->tm_yday;
 	}
 
 	int getDayOfWeek() {
+		// TODO: Create own localtime function to make it thread-safe.
 		return localtime(&timeData)->tm_wday;
 	}
 
 	int getHour() {
+		// TODO: Create own localtime function to make it thread-safe.
 		return localtime(&timeData)->tm_hour;
 	}
 
-	int getMinute() {
+	int getMinutes() {
+		// TODO: Create own localtime function to make it thread-safe.
 		return localtime(&timeData)->tm_min;
 	}
 
-	int getSecond() {
+	int getSeconds() {
+		// TODO: Create own localtime function to make it thread-safe.
 		return localtime(&timeData)->tm_sec;
 	}
 
+	void setYear(int year) {
+		// TODO: Determine behaviour when time is out of range.
+		tm *timeStruct = localtime(&timeData);
+		timeStruct->tm_year = year - YEAR_DIFFERENCE_TO_MK;
+		timeData = mktime(timeStruct);
+	}
+	
+	void setMonth(int month) {
+		// TODO: Determine behaviour when time is out of range.
+		tm *timeStruct = localtime(&timeData);
+		timeStruct->tm_mon = month - 1;
+		timeData = mktime(timeStruct);
+	}
+
+	void setDayOfMonth(int day) {
+		// TODO: Determine behaviour when time is out of range.
+		tm *timeStruct = localtime(&timeData);
+		timeStruct->tm_mday = day;
+		timeData = mktime(timeStruct);
+	}
+
+	void setDayOfYear(int day) {
+		// TODO: Determine behaviour when time is out of range.
+		tm *timeStruct = localtime(&timeData);
+		timeStruct->tm_yday = day;
+		timeData = mktime(timeStruct);
+	}
+
+	void setDayOfWeek(int day) {
+		// TODO: Determine behaviour when time is out of range.
+		tm *timeStruct = localtime(&timeData);
+		timeStruct->tm_yday = day;
+		timeData = mktime(timeStruct);
+	}
+
+	void setHour(int hour) {
+		// TODO: Determine behaviour when time is out of range.
+		tm *timeStruct = localtime(&timeData);
+		timeStruct->tm_hour = hour;
+		timeData = mktime(timeStruct);
+	}
+
+	void setMinutes(int minutes) {
+		// TODO: Determine behaviour when time is out of range.
+		tm *timeStruct = localtime(&timeData);
+		timeStruct->tm_min = minutes;
+		timeData = mktime(timeStruct);
+	}
+
+	void setSeconds(int seconds) {
+		// TODO: Determine behaviour when time is out of range.
+		tm *timeStruct = localtime(&timeData);
+		timeStruct->tm_sec = seconds;
+		timeData = mktime(timeStruct);
+	}
+
+	enum WEEKDAY {
+		MONDAY,
+		TUESDAY,
+		WEDNESDAY,
+		THURSDAY,
+		FRIDAY,
+		SATURDAY,
+		SUNDAY
+	};
+
+	enum MONTH {
+		JANUARY,
+		FEBRUARY,
+		MARCH,
+		APRIL,
+		MAY,
+		JUNE,
+		JULY,
+		AUGUST,
+		SEPTEMBER,
+		OCTOBER,
+		NOVEMBER,
+		DECEMBER
+	};
+
 	private:
 	time_t timeData;
+
+	static const int YEAR_DIFFERENCE_TO_MK = 1900;
+
+	std::string leadZeroes(std::string str, int desiredLength) {
+		for (int i = str.length(); i < desiredLength; i++) {
+			str.append("0");
+		}
+		return str;
+	}
 };
 
 #else
